@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+/*
+ * Finanças Fácil — Design tokens (PRD §4.1 / §4.2)
+ * Paleta que transmite confiança, estabilidade e clareza financeira.
+ */
+@theme {
+  --color-primary: #2e7d32; /* Verde Floresta — crescimento / saúde financeira */
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #1565c0; /* Azul Cobalto — investimentos / confiança */
+  --color-secondary-foreground: #ffffff;
+  --color-success: #43a047; /* Verde Esmeralda — receitas / metas */
+  --color-error: #d32f2f; /* Vermelho — despesas / estouro de orçamento */
+
+  --color-background: #f5f5f5; /* Cinza Claro — leitura de dados */
+  --color-surface: #ffffff;
+  --color-foreground: #1a1a1a;
+  --color-muted: #5f6368;
+  --color-border: #e0e0e0;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --radius: 0.5rem;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+/* Numerais tabulares para colunas financeiras (PRD §4.2) */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
