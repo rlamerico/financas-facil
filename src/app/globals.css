@@ -2,25 +2,153 @@
 
 /*
  * Finanças Fácil — Design tokens (PRD §4.1 / §4.2)
- * Paleta que transmite confiança, estabilidade e clareza financeira.
+ * Direção "Ledger em Camadas": profundidade física (sombras duplas),
+ * neutros com tint verde e dark mode via next-themes (classe `.dark`).
  */
-@theme {
-  --color-primary: #2e7d32; /* Verde Floresta — crescimento / saúde financeira */
-  --color-primary-foreground: #ffffff;
-  --color-secondary: #1565c0; /* Azul Cobalto — investimentos / confiança */
-  --color-secondary-foreground: #ffffff;
-  --color-success: #43a047; /* Verde Esmeralda — receitas / metas */
-  --color-error: #d32f2f; /* Vermelho — despesas / estouro de orçamento */
 
-  --color-background: #f5f5f5; /* Cinza Claro — leitura de dados */
-  --color-surface: #ffffff;
-  --color-foreground: #1a1a1a;
-  --color-muted: #5f6368;
-  --color-border: #e0e0e0;
+/* Variante dark por classe (next-themes aplica `.dark` no <html>). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* ── Ramps da marca (estáticas, iguais nos dois temas) ─────────── */
+  --color-primary-50: #eef7ee;
+  --color-primary-100: #d7ecd8;
+  --color-primary-200: #b3dab5;
+  --color-primary-300: #86c28a;
+  --color-primary-400: #57a75d;
+  --color-primary-500: #3b9142;
+  --color-primary-600: #2e7d32; /* Verde Floresta — marca */
+  --color-primary-700: #256428;
+  --color-primary-800: #1e4f21;
+  --color-primary-900: #173f1b;
+  --color-primary-950: #0b2410;
+
+  --color-secondary-50: #eaf2fc;
+  --color-secondary-100: #d0e2f8;
+  --color-secondary-200: #a6c9f0;
+  --color-secondary-300: #74abe6;
+  --color-secondary-400: #4189d8;
+  --color-secondary-500: #1f74cd;
+  --color-secondary-600: #1565c0; /* Azul Cobalto — marca */
+  --color-secondary-700: #1052a0;
+  --color-secondary-800: #0d4280;
+  --color-secondary-900: #0a3363;
+  --color-secondary-950: #061f3d;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
   --radius: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+
+  /* ── Motion ────────────────────────────────────────────────────── */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-fade-up: fade-up 0.5s var(--ease-out-soft) both;
+  --animate-fade-in: fade-in 0.4s ease-out both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* Tokens semânticos: apontam pra variáveis que flipam no dark mode. */
+@theme inline {
+  --color-primary: var(--tone-primary);
+  --color-primary-foreground: var(--tone-primary-foreground);
+  --color-secondary: var(--tone-secondary);
+  --color-secondary-foreground: var(--tone-secondary-foreground);
+  --color-success: var(--tone-success);
+  --color-error: var(--tone-error);
+
+  --color-background: var(--tone-background);
+  --color-surface: var(--tone-surface);
+  --color-surface-raised: var(--tone-surface-raised);
+  --color-foreground: var(--tone-foreground);
+  --color-muted: var(--tone-muted);
+  --color-border: var(--tone-border);
+
+  --shadow-card: var(--elev-card);
+  --shadow-raised: var(--elev-raised);
+  --shadow-overlay: var(--elev-overlay);
+  --shadow-hero: var(--elev-hero);
+}
+
+/* ── Tema claro (default) ─────────────────────────────────────────── */
+:root {
+  --tone-primary: #2e7d32;
+  --tone-primary-foreground: #ffffff;
+  --tone-secondary: #1565c0;
+  --tone-secondary-foreground: #ffffff;
+  --tone-success: #43a047; /* receitas / metas */
+  --tone-error: #d32f2f; /* despesas / estouro de orçamento */
+
+  --tone-background: #f2f5f2; /* cinza com tint verde — leitura de dados */
+  --tone-surface: #ffffff;
+  --tone-surface-raised: #fbfdfb;
+  --tone-foreground: #17201a;
+  --tone-muted: #5b665d;
+  --tone-border: #e2e7e2;
+
+  --elev-card:
+    0 1px 2px rgb(23 32 26 / 0.05),
+    0 1px 3px rgb(23 32 26 / 0.07);
+  --elev-raised:
+    0 2px 4px rgb(23 32 26 / 0.06),
+    0 10px 28px -10px rgb(23 32 26 / 0.16);
+  --elev-overlay:
+    0 4px 8px rgb(23 32 26 / 0.08),
+    0 20px 48px -12px rgb(23 32 26 / 0.24);
+  --elev-hero:
+    0 8px 16px -6px rgb(23 63 27 / 0.35),
+    0 24px 56px -16px rgb(23 63 27 / 0.4);
+}
+
+/* ── Tema escuro ──────────────────────────────────────────────────── */
+.dark {
+  /* Acentos mais claros p/ contraste sobre fundo escuro (WCAG AA). */
+  --tone-primary: #6cc070;
+  --tone-primary-foreground: #0b2410;
+  --tone-secondary: #6fa8e8;
+  --tone-secondary-foreground: #061f3d;
+  --tone-success: #72c476;
+  --tone-error: #ef6b64;
+
+  --tone-background: #0e1210; /* verde-preto profundo */
+  --tone-surface: #161c18;
+  --tone-surface-raised: #1c231e;
+  --tone-foreground: #e9efe9;
+  --tone-muted: #9aa69c;
+  --tone-border: #27302a;
+
+  --elev-card:
+    0 1px 2px rgb(0 0 0 / 0.4),
+    0 1px 3px rgb(0 0 0 / 0.35);
+  --elev-raised:
+    0 2px 4px rgb(0 0 0 / 0.45),
+    0 10px 28px -10px rgb(0 0 0 / 0.6);
+  --elev-overlay:
+    0 4px 8px rgb(0 0 0 / 0.5),
+    0 20px 48px -12px rgb(0 0 0 / 0.7);
+  --elev-hero:
+    0 8px 16px -6px rgb(0 0 0 / 0.5),
+    0 24px 56px -16px rgb(11 36 16 / 0.8);
 }
 
 body {
@@ -32,4 +160,36 @@ body {
 /* Numerais tabulares para colunas financeiras (PRD §4.2) */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+
+/* Scroll-reveal progressivo (landing): navegadores sem suporte a
+   animation-timeline só mostram o conteúdo estático. */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .reveal-on-scroll {
+    animation: reveal-up 0.6s var(--ease-out-soft) both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+}
+
+/* Acessibilidade: quem pede menos movimento, recebe menos movimento. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

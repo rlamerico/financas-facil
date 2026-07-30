@@ -9,6 +9,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { HeroMockup } from "@/components/landing/hero-mockup";
 
 const features = [
   {
@@ -74,27 +75,45 @@ export default function Home() {
       </header>
 
       <main className="flex-1">
-        <section className="mx-auto max-w-6xl px-4 py-20 text-center sm:py-28">
-          <p className="mb-4 inline-block rounded-full bg-primary/10 px-4 py-1 text-sm font-medium text-primary">
-            Substitua a planilha de finanças de uma vez
-          </p>
-          <h1 className="mx-auto max-w-3xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-            Controle financeiro 360° para sua{" "}
-            <span className="text-primary">família</span> e seu{" "}
-            <span className="text-secondary">negócio</span>
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
-            O Finanças Fácil reúne receitas, despesas, orçamentos e
-            investimentos em um só lugar — com automação que importa seus dados
-            e dashboards que comparam o planejado com o realizado.
-          </p>
-          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button asChild size="lg">
-              <Link href="/signup">Criar minha conta</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="#recursos">Ver recursos</Link>
-            </Button>
+        {/* Hero assimétrico: texto + prévia 3D do Dashboard */}
+        <section className="relative overflow-hidden">
+          {/* Mesh gradient discreto nas cores da marca */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 -z-10"
+          >
+            <div className="absolute -top-32 right-[-10%] h-96 w-96 rounded-full bg-primary-200/40 blur-3xl dark:bg-primary-800/25" />
+            <div className="absolute bottom-[-20%] left-[-5%] h-80 w-80 rounded-full bg-secondary-200/35 blur-3xl dark:bg-secondary-800/20" />
+          </div>
+
+          <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:py-24 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="animate-fade-up">
+              <p className="mb-4 inline-block rounded-full bg-primary/10 px-4 py-1 text-sm font-medium text-primary">
+                Substitua a planilha de finanças de uma vez
+              </p>
+              <h1 className="max-w-xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+                Controle financeiro 360° para sua{" "}
+                <span className="text-primary">família</span> e seu{" "}
+                <span className="text-secondary">negócio</span>
+              </h1>
+              <p className="mt-6 max-w-xl text-lg text-muted">
+                O Finanças Fácil reúne receitas, despesas, orçamentos e
+                investimentos em um só lugar — com automação que importa seus
+                dados e dashboards que comparam o planejado com o realizado.
+              </p>
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                <Button asChild size="lg">
+                  <Link href="/signup">Criar minha conta</Link>
+                </Button>
+                <Button asChild size="lg" variant="outline">
+                  <Link href="#recursos">Ver recursos</Link>
+                </Button>
+              </div>
+            </div>
+
+            <div className="animate-fade-up mx-auto w-full max-w-md [animation-delay:150ms] lg:max-w-none">
+              <HeroMockup />
+            </div>
           </div>
         </section>
 
@@ -110,9 +129,9 @@ export default function Home() {
               {features.map(({ icon: Icon, title, description }) => (
                 <div
                   key={title}
-                  className="rounded-[var(--radius)] border border-border bg-background p-6"
+                  className="reveal-on-scroll rounded-lg border border-border bg-background p-6 shadow-card transition-[box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:shadow-raised"
                 >
-                  <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-[var(--radius)] bg-primary/10 text-primary">
+                  <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
                     <Icon className="h-6 w-6" aria-hidden />
                   </div>
                   <h3 className="text-lg font-semibold">{title}</h3>

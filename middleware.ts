@@ -1,0 +1,16 @@
+import { type NextRequest } from "next/server";
+import { updateSession } from "@/services/supabase/middleware";
+
+export async function middleware(request: NextRequest) {
+  return updateSession(request);
+}
+
+export const config = {
+  matcher: [
+    /*
+     * Roda em todas as rotas exceto assets estáticos e a própria imagem de
+     * otimização do Next.js (padrão oficial Supabase/Next.js).
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
+};

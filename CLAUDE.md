@@ -78,12 +78,14 @@ npm run dev         # local dev server (Turbopack) → http://localhost:3000
 npm run build       # production build
 npm start           # serve the production build
 npm run lint        # eslint
-npm run typecheck   # tsc --noEmit (no test runner wired yet)
+npm run typecheck   # tsc --noEmit
+npm test            # vitest run
+npm run test:watch  # vitest (watch mode)
 ```
 
 ### Environment setup (IMPORTANT — this repo lives inside Google Drive)
 
-Two machine-specific gotchas were hit during Phase 0; a fresh checkout needs both:
+Three machine-specific gotchas were hit during Phase 0/1; a fresh checkout needs all three:
 
 1. **`node_modules` must NOT live in the Drive folder.** Google Drive's sync layer
    makes writing thousands of small files unbearably slow (`npm install` never
@@ -101,6 +103,20 @@ Two machine-specific gotchas were hit during Phase 0; a fresh checkout needs bot
    security find-certificate -a -p /Library/Keychains/System.keychain                          >> ~/.local/share/certs/macos-ca-bundle.pem
    npm config set cafile "$HOME/.local/share/certs/macos-ca-bundle.pem"
    ```
+3. **Same TLS interception breaks Node's runtime `fetch`, not just npm.** `npm config
+   set cafile` only fixes `npm install`. The Supabase JS SDK calls `fetch()` from
+   inside the Next.js server process (Server Actions, Route Handlers, middleware),
+   and Node ignores the system/npm CA store — without `NODE_EXTRA_CA_CERTS` it fails
+   with `SELF_SIGNED_CERT_IN_CHAIN`, which surfaces in the browser as a generic
+   "Failed to fetch" on any Supabase call (e.g. signup/login). `npm run dev` already
+   handles this via `scripts/dev.sh` (sets `NODE_EXTRA_CA_CERTS` if the bundle from
+   gotcha #2 exists). If you ever run `next dev`/`next start` directly instead of
+   through the npm scripts, export it yourself first:
+   ```bash
+   export NODE_EXTRA_CA_CERTS="$HOME/.local/share/certs/macos-ca-bundle.pem"
+   ```
+   Not needed on Vercel (no corporate proxy there), so `build`/`start` scripts are
+   left untouched.
 
 Copy `.env.example` → `.env.local` and fill the Supabase keys before running with real data.
 
