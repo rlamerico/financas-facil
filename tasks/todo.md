@@ -1,5 +1,46 @@
 # TODO — Finanças Fácil
 
+## Módulo Empresas — Fase 1: Recebimentos (plano aprovado — 2026-10-20, NÃO iniciado)
+
+Objetivo: o sistema atende também pequenos negócios (MEI/ME). Primeira entrega:
+financeiro de recebimentos de clientes PJ do **Brasil (BRL)** e do **exterior (USD)**,
+com exportação para a contabilidade (data do recebimento, valor em USD, valor em BRL).
+
+**Decisões do usuário**
+- Cotação: **opção (c)** — campo editável com o **BRL efetivamente recebido** + **PTAX do BCB**
+  sugerida automaticamente como referência (guardar as duas).
+- Regime: suportar **MEI e Simples Nacional** (`companies.regime`). Limite anual do MEI
+  (R$ 81 mil), DAS e Fator R ficam para a Fase 2.
+
+**Branch (ao iniciar):** `feat/empresa-recebimentos` — commits atômicos `feat(business): ...`; sem push sem aprovação.
+
+- [x] Fase 1 — Migrations `009`–`010` (escritas e versionadas; **não aplicadas no banco**): `companies` (cnpj, regime mei/simples/outro), `business_clients` (origin domestic/foreign, country, document), `business_receipts` (currency, amount_original, exchange_rate, ptax_rate, amount_brl, invoice_ref, status, attachment_url). RLS no mesmo `CREATE TABLE` (padrão `006_bank_accounts.sql`, via `companies.profile_id`); checks: USD exige exchange_rate+amount_brl, BRL exige amount_brl = amount_original; índices company_id/received_on. Validar com `get_advisors` + regenerar `src/types/database.ts`. Conferir `supabase/.temp/project-ref` antes do push.
+- [x] Fase 2 — Lógica pura com TDD em `src/utils/business/`: `convert-currency`, `receipts-summary`, `accounting-export`; Zod em `src/utils/validation/business-schemas.ts` (CNPJ com dígito verificador, USD exige cotação, valores > 0). Testar erros: cotação 0, USD sem cotação, data futura, CNPJ inválido.
+- [x] Fase 3 — Route Handler `GET /api/fx/ptax?date=` (API Olinda do BCB; fim de semana/feriado → último dia útil; Zod na data; fallback de digitação manual se a API falhar).
+- [x] Fase 4 — UI: seletor de empresa + rotas `/empresa/clientes`, `/empresa/recebimentos` (modal com PTAX sugerida, BRL calculado ao vivo e editável), `/empresa/contabilidade` (prévia mensal + CSV/Excel via `utils/export.ts`: Data | Cliente | Origem | USD | Cotação | BRL | NF). Item "Empresa" em `nav-items.tsx`; hooks React Query no padrão `use-bank-accounts.ts`.
+- [~] Fase 5 — Verificação (parcial, ver "Review" abaixo; pendente: aprovação para aplicar migrations e teste manual no browser): `npm run typecheck && npm run lint && npm test && npm run build`; cobertura ≥ 80% em `utils/business`; teste manual do fluxo no browser; `security-reviewer` (RLS + rota) e `database-reviewer` (migrations).
+
+**Riscos:** cotação divergente do contador (guardar PTAX + efetiva) · arredondamento (NUMERIC + função única) · vazamento entre empresas (RLS + teste com 2 usuários) · API BCB fora (fallback manual) · migration no projeto errado · escopo crescendo (Fase 1 = só recebimentos + exportação).
+
+**Backlog Fase 2+ (ideias):** despesas da empresa · contas a pagar/receber com alertas · NFS-e · limite anual MEI + DAS · DRE e fluxo de caixa · portal do contador (role `viewer`) · importação Wise/Remessa Online via n8n.
+
+### Review do módulo Empresas — Fase 1 (2026-10-20)
+
+Branch `feat/empresa-recebimentos`, specs 001–012 em `.specs/`. Commits atômicos, sem push.
+
+- **Implementado:** migrations 009/010 (RLS em todas as tabelas), utilitários de câmbio/resumo/contabilidade/PTAX/filtros (TDD), schemas Zod (CNPJ com dígito verificador), rota `GET /api/fx/ptax` (exige sessão, timeout 5 s, retrocesso de até 7 dias), hooks React Query, telas `/empresa`, `/empresa/clientes`, `/empresa/recebimentos`, `/empresa/contabilidade` e item "Empresa" na navegação (P13).
+- **Verificado:** 37 arquivos / 292 testes passando; `tsc` e `eslint` limpos; `npm run build` passa (com placeholders de env, ver abaixo); cobertura dos módulos de negócio 97,7% (instruções) / 96,7% (ramos).
+- **Segurança (revisão feita inline):** encontrado e corrigido em `3ad6320` — o `WITH CHECK` do UPDATE de `business_receipts` não exigia que a empresa de destino fosse do usuário. Demais policies e a rota PTAX revisadas sem achados CRITICAL/HIGH.
+- **Pendências de baixo risco:** campos de texto sem limite de tamanho (nome, observações, NF); `document` do cliente do exterior sem formato. Registrar como melhoria.
+- **Pendente de aprovação do usuário:**
+  1. Aplicar `009_companies.sql` e `010_business_clients_receipts.sql` no Supabase (`cat supabase/.temp/project-ref` antes), depois `get_advisors` (security).
+  2. Testar RLS com dois usuários (B não lê/altera/insere dados da empresa de A).
+  3. Teste manual no browser (cadastro → cliente exterior → recebimento USD com PTAX → exportação do mês).
+  4. `git push` e PR.
+- **Ambiente:** `npm run build` falha sem `.env.local` (`NEXT_PUBLIC_SUPABASE_*` ausentes) também na `main`; é pré-existente e não relacionado às mudanças.
+- **Dependências:** `npm audit` reporta 18 vulnerabilidades (1 crítica, 13 altas) já existentes antes deste módulo; não foram alteradas.
+- **Cobertura:** `@vitest/coverage-v8` foi usado só com `--no-save`; o `package.json` não foi alterado.
+
 ## Integração Planilha → Sistema (implementada — 2026-07-04)
 
 Sync **espelho** da planilha "Finanças Familiares 2026" via Google Apps
