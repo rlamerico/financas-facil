@@ -3,6 +3,7 @@ import {
   businessClientSchema,
   businessReceiptSchema,
   companySchema,
+  ptaxDateSchema,
 } from "./business-schemas";
 
 const VALID_CNPJ = "11.444.777/0001-61";
@@ -125,6 +126,28 @@ describe("businessClientSchema", () => {
     expect(
       businessClientSchema.safeParse({ name: "", origin: "domestic" }).success,
     ).toBe(false);
+  });
+});
+
+describe("ptaxDateSchema", () => {
+  test("aceita data passada no formato YYYY-MM-DD", () => {
+    expect(ptaxDateSchema.safeParse(PAST_DATE).success).toBe(true);
+  });
+
+  test("rejeita formato DD/MM/AAAA", () => {
+    expect(ptaxDateSchema.safeParse("16/10/2026").success).toBe(false);
+  });
+
+  test("rejeita data inexistente", () => {
+    expect(ptaxDateSchema.safeParse("2026-02-30").success).toBe(false);
+  });
+
+  test("rejeita data futura", () => {
+    expect(ptaxDateSchema.safeParse(FUTURE_DATE).success).toBe(false);
+  });
+
+  test("rejeita ausência de data", () => {
+    expect(ptaxDateSchema.safeParse(undefined).success).toBe(false);
   });
 });
 

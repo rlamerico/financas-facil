@@ -136,3 +136,10 @@ export const businessReceiptSchema = z
   });
 
 export type BusinessReceiptInput = z.infer<typeof businessReceiptSchema>;
+
+export const ptaxDateSchema = z
+  .string()
+  .trim()
+  .regex(ISO_DATE_PATTERN, "Informe a data no formato AAAA-MM-DD.")
+  .refine(isRealIsoDate, "Data inválida.")
+  .refine((value) => value <= todayIsoDate(), "A data não pode ser futura.");
