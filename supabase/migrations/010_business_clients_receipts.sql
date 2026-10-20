@@ -112,6 +112,11 @@ CREATE POLICY "Users can update own business receipts" ON business_receipts
     )
   ) WITH CHECK (
     EXISTS (
+      SELECT 1 FROM companies c
+      JOIN profiles p ON p.id = c.profile_id
+      WHERE c.id = business_receipts.company_id AND p.user_id = auth.uid()
+    )
+    AND EXISTS (
       SELECT 1 FROM business_clients bc
       WHERE bc.id = business_receipts.client_id
         AND bc.company_id = business_receipts.company_id
