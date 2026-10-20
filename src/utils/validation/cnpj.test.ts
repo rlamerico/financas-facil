@@ -1,5 +1,15 @@
 import { describe, expect, test } from "vitest";
-import { isValidCnpj, normalizeCnpj } from "./cnpj";
+import { formatCnpj, isValidCnpj, normalizeCnpj } from "./cnpj";
+
+describe("formatCnpj", () => {
+  test("aplica a máscara XX.XXX.XXX/XXXX-XX", () => {
+    expect(formatCnpj("11444777000161")).toBe("11.444.777/0001-61");
+  });
+
+  test("retorna o texto original quando não tem 14 dígitos", () => {
+    expect(formatCnpj("1234")).toBe("1234");
+  });
+});
 
 describe("normalizeCnpj", () => {
   test("remove máscara e deixa somente dígitos", () => {

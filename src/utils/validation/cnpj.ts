@@ -9,6 +9,21 @@ export function normalizeCnpj(raw: string): string {
   return raw.replace(/\D/g, "");
 }
 
+const CNPJ_MASK_PATTERN = /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/;
+
+/** Aplica a máscara XX.XXX.XXX/XXXX-XX; devolve o texto original se não tiver 14 dígitos. */
+export function formatCnpj(digits: string): string {
+  const match = CNPJ_MASK_PATTERN.exec(digits);
+
+  if (!match) {
+    return digits;
+  }
+
+  const [, a, b, c, d, e] = match;
+
+  return `${a}.${b}.${c}/${d}-${e}`;
+}
+
 function computeCheckDigit(digits: string, weights: readonly number[]): number {
   const sum = weights.reduce(
     (total, weight, index) => total + Number(digits[index]) * weight,
