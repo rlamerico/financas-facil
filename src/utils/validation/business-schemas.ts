@@ -80,10 +80,22 @@ export const businessClientSchema = businessClientBaseSchema
         message: "Cliente do Brasil usa BRL; cliente do exterior usa USD.",
       });
     }
+
+    if (client.origin === "domestic" && !isValidCnpj(client.document ?? "")) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["document"],
+        message: "Informe um CNPJ válido para cliente do Brasil.",
+      });
+    }
   })
   .transform((client) => ({
     ...client,
     default_currency: client.default_currency ?? CURRENCY_BY_ORIGIN[client.origin],
+    document:
+      client.origin === "domestic" && client.document
+        ? normalizeCnpj(client.document)
+        : client.document,
   }));
 
 export type BusinessClientInput = z.infer<typeof businessClientSchema>;

@@ -62,14 +62,54 @@ describe("companySchema", () => {
 });
 
 describe("businessClientSchema", () => {
-  test("aceita cliente do Brasil e assume BRL por padrão", () => {
+  test("aceita cliente do Brasil com CNPJ válido e assume BRL por padrão", () => {
+    const result = businessClientSchema.safeParse({
+      name: "Cliente Nacional Ltda",
+      origin: "domestic",
+      document: VALID_CNPJ,
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.success && result.data.default_currency).toBe("BRL");
+  });
+
+  test("normaliza o CNPJ do cliente do Brasil para dígitos", () => {
+    const result = businessClientSchema.safeParse({
+      name: "Cliente Nacional Ltda",
+      origin: "domestic",
+      document: VALID_CNPJ,
+    });
+
+    expect(result.success && result.data.document).toBe("11444777000161");
+  });
+
+  test("rejeita cliente do Brasil sem CNPJ", () => {
     const result = businessClientSchema.safeParse({
       name: "Cliente Nacional Ltda",
       origin: "domestic",
     });
 
+    expect(result.success).toBe(false);
+  });
+
+  test("rejeita cliente do Brasil com CNPJ inválido", () => {
+    const result = businessClientSchema.safeParse({
+      name: "Cliente Nacional Ltda",
+      origin: "domestic",
+      document: "11444777000162",
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  test("aceita cliente do exterior sem documento (ID estrangeiro é opcional)", () => {
+    const result = businessClientSchema.safeParse({
+      name: "Acme Inc",
+      origin: "foreign",
+      country: "US",
+    });
+
     expect(result.success).toBe(true);
-    expect(result.success && result.data.default_currency).toBe("BRL");
   });
 
   test("aceita cliente do exterior com país e assume USD por padrão", () => {
