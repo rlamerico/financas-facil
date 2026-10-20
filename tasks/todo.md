@@ -34,12 +34,13 @@ Branch `feat/empresa-recebimentos`, specs 001–012 em `.specs/`. Commits atômi
 - **Segurança (revisão feita inline):** encontrado e corrigido em `3ad6320` — o `WITH CHECK` do UPDATE de `business_receipts` não exigia que a empresa de destino fosse do usuário. Demais policies e a rota PTAX revisadas sem achados CRITICAL/HIGH.
 - **Pendências de baixo risco:** campos de texto sem limite de tamanho (nome, observações, NF); `document` do cliente do exterior sem formato. Registrar como melhoria.
 - **Pendente de aprovação do usuário:**
-  1. Aplicar `010_companies.sql` e `011_business_clients_receipts.sql` no Supabase (`cat supabase/.temp/project-ref` antes), depois `get_advisors` (security).
-  2. Testar RLS com dois usuários (B não lê/altera/insere dados da empresa de A).
+  1. ~~Aplicar migrations~~ **Feito** (2026-10-20): `010_companies` e `011_business_clients_receipts` aplicadas no projeto `fvbugayxfmkjfbfwvheb` (ACTIVE_HEALTHY), RLS ativo e 4 policies por tabela. Advisors de segurança: nenhum achado nas tabelas novas (restam avisos pré-existentes em `rls_auto_enable`, `is_admin` e proteção de senha vazada do Auth).
+  2. ~~Testar RLS com dois usuários~~ **Feito** em transação revertida: B não lê, altera, apaga nem insere na empresa de A; B não move recebimento para a empresa de A; A lê a própria empresa. Nenhum dado de teste ficou no banco.
   3. Teste manual no browser (cadastro → cliente exterior → recebimento USD com PTAX → exportação do mês).
   4. `git push` e PR.
 - **Ambiente:** `npm run build` falha sem `.env.local` (`NEXT_PUBLIC_SUPABASE_*` ausentes) também na `main`; é pré-existente e não relacionado às mudanças.
 - **Dependências:** `npm audit` reporta 18 vulnerabilidades (1 crítica, 13 altas) já existentes antes deste módulo; não foram alteradas.
+- **Pendente (não bloqueia o teste manual):** trocar o token `financas-facil` (`sbp_24`, clássico) por um token escopado `sbp_fc` ao projeto, conforme SUPABASE.md.
 - **Cobertura:** `@vitest/coverage-v8` foi usado só com `--no-save`; o `package.json` não foi alterado.
 
 ## Integração Planilha → Sistema (implementada — 2026-07-04)
