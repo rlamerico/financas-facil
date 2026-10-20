@@ -27,7 +27,7 @@ function isRealIsoDate(value: string): boolean {
   );
 }
 
-function todayIsoDate(now: Date = new Date()): string {
+export function todayIsoDate(now: Date = new Date()): string {
   const localNow = new Date(now.getTime() - now.getTimezoneOffset() * MS_PER_MINUTE);
 
   return localNow.toISOString().slice(0, ISO_DATE_LENGTH);

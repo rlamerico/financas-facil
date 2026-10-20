@@ -9,6 +9,13 @@ export interface MonthRange {
   to: string;
 }
 
+/** Mês `YYYY-MM` da data informada, no fuso local. */
+export function formatMonthKey(date: Date): string {
+  const monthNumber = date.getMonth() + 1;
+
+  return `${date.getFullYear()}-${String(monthNumber).padStart(2, "0")}`;
+}
+
 /** Intervalo `[from, to)` de um mês `YYYY-MM`, pronto para filtrar `received_on`. */
 export function monthRange(month: string): MonthRange {
   const match = MONTH_PATTERN.exec(month);

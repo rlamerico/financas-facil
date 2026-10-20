@@ -1,5 +1,15 @@
 import { describe, expect, test } from "vitest";
-import { monthRange } from "./month-range";
+import { formatMonthKey, monthRange } from "./month-range";
+
+describe("formatMonthKey", () => {
+  test("formata a data local no formato YYYY-MM", () => {
+    expect(formatMonthKey(new Date(2026, 9, 20))).toBe("2026-10");
+  });
+
+  test("preenche o mês com zero à esquerda", () => {
+    expect(formatMonthKey(new Date(2026, 0, 3))).toBe("2026-01");
+  });
+});
 
 describe("monthRange", () => {
   test("retorna do primeiro dia até o primeiro dia do mês seguinte (exclusivo)", () => {
