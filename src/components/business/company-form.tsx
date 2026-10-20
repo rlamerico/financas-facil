@@ -12,6 +12,7 @@ import {
 } from "@/hooks/use-companies";
 import { REGIME_LABELS } from "@/utils/business/labels";
 import { companySchema } from "@/utils/validation/business-schemas";
+import { toFieldErrors } from "@/utils/validation/field-errors";
 
 interface CompanyFormProps {
   profileId: string;
@@ -167,19 +168,6 @@ export function CompanyForm({ profileId, company, onClose, onSaved }: CompanyFor
       </Dialog.Portal>
     </Dialog.Root>
   );
-}
-
-function toFieldErrors(issues: { path: PropertyKey[]; message: string }[]) {
-  const fieldErrors: Record<string, string> = {};
-
-  for (const issue of issues) {
-    const key = String(issue.path[0]);
-    if (!fieldErrors[key]) {
-      fieldErrors[key] = issue.message;
-    }
-  }
-
-  return fieldErrors;
 }
 
 function toSaveErrorMessage(error: unknown): string {
