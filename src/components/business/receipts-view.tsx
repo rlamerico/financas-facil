@@ -4,10 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  useBusinessClients,
-  type BusinessClient,
-} from "@/hooks/use-business-clients";
+import { useBusinessClients } from "@/hooks/use-business-clients";
 import {
   useBusinessReceipts,
   useDeleteBusinessReceipt,
@@ -16,32 +13,14 @@ import {
 import { filterReceipts, type ReceiptOrigin } from "@/utils/business/receipt-filters";
 import { formatMonthKey } from "@/utils/business/month-range";
 import { formatRate, formatUsd } from "@/utils/business/money-format";
-import { summarizeReceipts, type ReceiptRow } from "@/utils/business/receipts-summary";
+import { summarizeReceipts } from "@/utils/business/receipts-summary";
 import { formatCurrency } from "@/utils/format";
+import { toOrigin, toReceiptRow } from "@/utils/business/receipt-mappers";
 import { useBusinessContext } from "./business-context";
 import { ReceiptForm } from "./receipt-form";
 import { ReceiptRow as ReceiptListRow } from "./receipt-row";
 
 const DELETE_ERROR = "Não foi possível excluir o recebimento.";
-
-function toReceiptRow(receipt: BusinessReceipt): ReceiptRow {
-  return {
-    id: receipt.id,
-    client_id: receipt.client_id,
-    received_on: receipt.received_on,
-    currency: receipt.currency === "USD" ? "USD" : "BRL",
-    amount_original: receipt.amount_original,
-    exchange_rate: receipt.exchange_rate,
-    ptax_rate: receipt.ptax_rate,
-    amount_brl: receipt.amount_brl,
-    invoice_ref: receipt.invoice_ref,
-    status: receipt.status === "expected" ? "expected" : "received",
-  };
-}
-
-function toOrigin(client: BusinessClient): ReceiptOrigin {
-  return client.origin === "foreign" ? "foreign" : "domestic";
-}
 
 function SummaryCard({ label, value }: { label: string; value: string }) {
   return (
