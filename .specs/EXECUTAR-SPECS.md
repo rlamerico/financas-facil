@@ -56,7 +56,7 @@ Ao finalizar, confirme quais CAs foram concluídos.
 ### Task 002 — Criar schema de clientes e recebimentos (requer 001)
 ```
 Leia `.specs/002-criar-schema-clientes-recebimentos/spec.md` completamente e leia `.specs/shared/regras-de-nomenclatura.md`.
-Valide a precondição: `supabase/migrations/009_companies.sql` existe. Se não existir, PARE e informe.
+Valide a precondição: `supabase/migrations/010_companies.sql` existe. Se não existir, PARE e informe.
 Execute TODOS os critérios de aceitação. NÃO aplique a migration no banco.
 Ao finalizar, confirme quais CAs foram concluídos.
 ```

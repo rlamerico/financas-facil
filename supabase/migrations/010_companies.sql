@@ -1,5 +1,5 @@
 -- Módulo Empresas (Fase 1): empresa MEI ou Simples Nacional do usuário.
--- Tabela-base do módulo; clientes e recebimentos (migration 010) referenciam esta.
+-- Tabela-base do módulo (migration 010; 009 já existe no remoto como credit_cards); clientes e recebimentos (migration 011) referenciam esta.
 --
 -- Mesmo padrão de RLS de `006_bank_accounts.sql`: o dono é quem tem `auth.uid()`
 -- batendo com `profiles.user_id` do `profile_id` da empresa.

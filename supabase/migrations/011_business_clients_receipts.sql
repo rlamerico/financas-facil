@@ -1,5 +1,5 @@
 -- Módulo Empresas (Fase 1): clientes PJ (Brasil/Exterior) e recebimentos com câmbio.
--- Depende de `009_companies.sql`. Padrão de RLS de `006_bank_accounts.sql`, mas a
+-- Depende de `010_companies.sql`. Padrão de RLS de `006_bank_accounts.sql`, mas a
 -- propriedade é verificada via empresa (companies -> profiles -> auth.uid()).
 --
 -- Cotação (decisão de produto, opção c): `amount_brl` é o BRL efetivamente recebido

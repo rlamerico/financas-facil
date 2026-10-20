@@ -18,7 +18,7 @@ npm run build
 ```
 
 ## Banco (Supabase)
-- Migrations ficam em `supabase/migrations/NNN_nome.sql` (as do módulo: `009_companies.sql`, `010_business_clients_receipts.sql`).
+- Migrations ficam em `supabase/migrations/NNN_nome.sql` (as do módulo: `010_companies.sql`, `011_business_clients_receipts.sql`).
 - Specs **escrevem** o SQL; **aplicar** exige aprovação explícita do usuário e `cat supabase/.temp/project-ref` conferido (irreversível no ambiente errado).
 - Toda tabela nova: `ENABLE ROW LEVEL SECURITY` no mesmo arquivo, antes de qualquer INSERT.
 
