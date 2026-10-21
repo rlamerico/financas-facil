@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
+    PostgrestVersion: "14.15"
   }
   public: {
     Tables: {
@@ -45,6 +45,57 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "bank_accounts_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      budgets: {
+        Row: {
+          actual_amount: number | null
+          category_id: string
+          created_at: string | null
+          id: string
+          month: number
+          planned_amount: number | null
+          profile_id: string
+          updated_at: string | null
+          year: number
+        }
+        Insert: {
+          actual_amount?: number | null
+          category_id: string
+          created_at?: string | null
+          id?: string
+          month: number
+          planned_amount?: number | null
+          profile_id: string
+          updated_at?: string | null
+          year: number
+        }
+        Update: {
+          actual_amount?: number | null
+          category_id?: string
+          created_at?: string | null
+          id?: string
+          month?: number
+          planned_amount?: number | null
+          profile_id?: string
+          updated_at?: string | null
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "budgets_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "budgets_profile_id_fkey"
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -159,37 +210,38 @@ export type Database = {
           },
         ]
       }
-      companies: {
+      card_aliases: {
         Row: {
-          cnpj: string
+          alias: string
+          card_id: string
           created_at: string | null
           id: string
-          legal_name: string
           profile_id: string
-          regime: string
-          trade_name: string | null
         }
         Insert: {
-          cnpj: string
+          alias: string
+          card_id: string
           created_at?: string | null
           id?: string
-          legal_name: string
           profile_id: string
-          regime: string
-          trade_name?: string | null
         }
         Update: {
-          cnpj?: string
+          alias?: string
+          card_id?: string
           created_at?: string | null
           id?: string
-          legal_name?: string
           profile_id?: string
-          regime?: string
-          trade_name?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "companies_profile_id_fkey"
+            foreignKeyName: "card_aliases_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "credit_cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "card_aliases_profile_id_fkey"
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -197,50 +249,203 @@ export type Database = {
           },
         ]
       }
-      budgets: {
+      card_entries: {
         Row: {
-          actual_amount: number | null
-          category_id: string
+          amount: number
+          amount_usd: number | null
+          card_id: string
+          category_id: string | null
+          category_label: string | null
           created_at: string | null
+          description: string
+          excluded_by: string | null
+          exclusion_reason: string | null
+          exclusion_rule_id: string | null
+          fingerprint: string
+          fx_rate: number | null
           id: string
-          month: number
-          planned_amount: number | null
+          installment_current: number | null
+          installment_total: number | null
+          is_excluded: boolean
           profile_id: string
+          purchase_date: string
+          raw_installment: string | null
+          statement_id: string
           updated_at: string | null
-          year: number
         }
         Insert: {
-          actual_amount?: number | null
-          category_id: string
+          amount: number
+          amount_usd?: number | null
+          card_id: string
+          category_id?: string | null
+          category_label?: string | null
           created_at?: string | null
+          description: string
+          excluded_by?: string | null
+          exclusion_reason?: string | null
+          exclusion_rule_id?: string | null
+          fingerprint: string
+          fx_rate?: number | null
           id?: string
-          month: number
-          planned_amount?: number | null
+          installment_current?: number | null
+          installment_total?: number | null
+          is_excluded?: boolean
           profile_id: string
+          purchase_date: string
+          raw_installment?: string | null
+          statement_id: string
           updated_at?: string | null
-          year: number
         }
         Update: {
-          actual_amount?: number | null
-          category_id?: string
+          amount?: number
+          amount_usd?: number | null
+          card_id?: string
+          category_id?: string | null
+          category_label?: string | null
           created_at?: string | null
+          description?: string
+          excluded_by?: string | null
+          exclusion_reason?: string | null
+          exclusion_rule_id?: string | null
+          fingerprint?: string
+          fx_rate?: number | null
           id?: string
-          month?: number
-          planned_amount?: number | null
+          installment_current?: number | null
+          installment_total?: number | null
+          is_excluded?: boolean
           profile_id?: string
+          purchase_date?: string
+          raw_installment?: string | null
+          statement_id?: string
           updated_at?: string | null
-          year?: number
         }
         Relationships: [
           {
-            foreignKeyName: "budgets_category_id_fkey"
+            foreignKeyName: "card_entries_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "credit_cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "card_entries_category_id_fkey"
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "budgets_profile_id_fkey"
+            foreignKeyName: "card_entries_exclusion_rule_id_fkey"
+            columns: ["exclusion_rule_id"]
+            isOneToOne: false
+            referencedRelation: "card_exclusion_rules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "card_entries_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "card_entries_statement_id_fkey"
+            columns: ["statement_id"]
+            isOneToOne: false
+            referencedRelation: "card_statements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      card_exclusion_rules: {
+        Row: {
+          card_id: string | null
+          created_at: string | null
+          id: string
+          is_active: boolean
+          match_type: string
+          match_value: string | null
+          name: string
+          profile_id: string
+        }
+        Insert: {
+          card_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean
+          match_type: string
+          match_value?: string | null
+          name: string
+          profile_id: string
+        }
+        Update: {
+          card_id?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean
+          match_type?: string
+          match_value?: string | null
+          name?: string
+          profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "card_exclusion_rules_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "credit_cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "card_exclusion_rules_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      card_statements: {
+        Row: {
+          card_id: string
+          id: string
+          imported_at: string | null
+          profile_id: string
+          reference_month: number
+          reference_year: number
+          source_file_name: string | null
+          source_sheet_name: string | null
+        }
+        Insert: {
+          card_id: string
+          id?: string
+          imported_at?: string | null
+          profile_id: string
+          reference_month: number
+          reference_year: number
+          source_file_name?: string | null
+          source_sheet_name?: string | null
+        }
+        Update: {
+          card_id?: string
+          id?: string
+          imported_at?: string | null
+          profile_id?: string
+          reference_month?: number
+          reference_year?: number
+          source_file_name?: string | null
+          source_sheet_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "card_statements_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "credit_cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "card_statements_profile_id_fkey"
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -282,6 +487,94 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "categories_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      companies: {
+        Row: {
+          cnpj: string
+          created_at: string | null
+          id: string
+          legal_name: string
+          profile_id: string
+          regime: string
+          trade_name: string | null
+        }
+        Insert: {
+          cnpj: string
+          created_at?: string | null
+          id?: string
+          legal_name: string
+          profile_id: string
+          regime: string
+          trade_name?: string | null
+        }
+        Update: {
+          cnpj?: string
+          created_at?: string | null
+          id?: string
+          legal_name?: string
+          profile_id?: string
+          regime?: string
+          trade_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "companies_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      credit_cards: {
+        Row: {
+          card_group: string
+          color: string | null
+          created_at: string | null
+          holder_label: string | null
+          id: string
+          is_active: boolean
+          issuer: string | null
+          last_four: string
+          name: string
+          profile_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          card_group?: string
+          color?: string | null
+          created_at?: string | null
+          holder_label?: string | null
+          id?: string
+          is_active?: boolean
+          issuer?: string | null
+          last_four: string
+          name: string
+          profile_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          card_group?: string
+          color?: string | null
+          created_at?: string | null
+          holder_label?: string | null
+          id?: string
+          is_active?: boolean
+          issuer?: string | null
+          last_four?: string
+          name?: string
+          profile_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_cards_profile_id_fkey"
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -460,10 +753,36 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      card_monthly_summary: {
+        Row: {
+          card_id: string | null
+          entries_count: number | null
+          excluded_count: number | null
+          profile_id: string | null
+          reference_month: number | null
+          reference_year: number | null
+          total_amount: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "card_entries_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "credit_cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "card_entries_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
-      [_ in never]: never
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
@@ -482,12 +801,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -511,11 +830,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -536,11 +855,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -561,11 +880,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -578,11 +897,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
