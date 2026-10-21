@@ -40,6 +40,7 @@ Branch `feat/empresa-recebimentos`, specs 001–012 em `.specs/`. Commits atômi
   4. `git push` e PR.
 - **Ambiente:** `npm run build` falha sem `.env.local` (`NEXT_PUBLIC_SUPABASE_*` ausentes) também na `main`; é pré-existente e não relacionado às mudanças.
 - **Dependências:** `npm audit` reporta 18 vulnerabilidades (1 crítica, 13 altas) já existentes antes deste módulo; não foram alteradas.
+- **Keep-alive (plano Free):** workflow `.github/workflows/supabase-keepalive.yml` faz consulta leve a `categories` a cada 3 dias (cron `0 12 */3 * *`), com `SUPABASE_URL` e `SUPABASE_ANON_KEY` nos secrets do repo. A chave usada é a **publishable** (`sb_publishable_`): a anon legacy responde 401 neste projeto. Validado localmente (HTTP 200). O agendamento só passa a rodar após o merge na `main`, porque o GitHub só agenda workflows da branch padrão.
 - **Pendente (não bloqueia o teste manual):** trocar o token `financas-facil` (`sbp_24`, clássico) por um token escopado `sbp_fc` ao projeto, conforme SUPABASE.md.
 - **Cobertura:** `@vitest/coverage-v8` foi usado só com `--no-save`; o `package.json` não foi alterado.
 
