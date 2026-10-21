@@ -2,12 +2,13 @@ import { describe, expect, test } from "vitest";
 import { getNavItemsForRole } from "./nav-items";
 
 describe("getNavItemsForRole", () => {
-  test("admin vê todos os 11 itens (P02-P12)", () => {
+  test("admin vê todos os 12 itens (P02-P13)", () => {
     const items = getNavItemsForRole("admin");
 
-    expect(items).toHaveLength(11);
+    expect(items).toHaveLength(12);
     expect(items.map((item) => item.id)).toContain("P08");
     expect(items.map((item) => item.id)).toContain("P12");
+    expect(items.map((item) => item.id)).toContain("P13");
   });
 
   test("user não vê Painel n8n nem Configurações de Sistema", () => {

@@ -8,6 +8,7 @@ import {
   Workflow,
   Landmark,
   CalendarClock,
+  Building2,
   UserCircle,
   Settings,
   type LucideIcon,
@@ -96,6 +97,13 @@ export const NAV_ITEMS: NavItem[] = [
     label: "Calendário de Contas",
     href: "/calendario",
     icon: CalendarClock,
+    roles: ["admin", "user", "viewer"],
+  },
+  {
+    id: "P13",
+    label: "Empresa",
+    href: "/empresa",
+    icon: Building2,
     roles: ["admin", "user", "viewer"],
   },
   {

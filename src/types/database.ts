@@ -52,6 +52,151 @@ export type Database = {
           },
         ]
       }
+      business_clients: {
+        Row: {
+          company_id: string
+          country: string | null
+          created_at: string | null
+          default_currency: string
+          document: string | null
+          id: string
+          name: string
+          origin: string
+        }
+        Insert: {
+          company_id: string
+          country?: string | null
+          created_at?: string | null
+          default_currency: string
+          document?: string | null
+          id?: string
+          name: string
+          origin: string
+        }
+        Update: {
+          company_id?: string
+          country?: string | null
+          created_at?: string | null
+          default_currency?: string
+          document?: string | null
+          id?: string
+          name?: string
+          origin?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_clients_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      business_receipts: {
+        Row: {
+          amount_brl: number
+          amount_original: number
+          attachment_url: string | null
+          client_id: string
+          company_id: string
+          created_at: string | null
+          currency: string
+          exchange_rate: number | null
+          id: string
+          invoice_ref: string | null
+          notes: string | null
+          ptax_rate: number | null
+          received_on: string
+          status: string
+        }
+        Insert: {
+          amount_brl: number
+          amount_original: number
+          attachment_url?: string | null
+          client_id: string
+          company_id: string
+          created_at?: string | null
+          currency: string
+          exchange_rate?: number | null
+          id?: string
+          invoice_ref?: string | null
+          notes?: string | null
+          ptax_rate?: number | null
+          received_on: string
+          status?: string
+        }
+        Update: {
+          amount_brl?: number
+          amount_original?: number
+          attachment_url?: string | null
+          client_id?: string
+          company_id?: string
+          created_at?: string | null
+          currency?: string
+          exchange_rate?: number | null
+          id?: string
+          invoice_ref?: string | null
+          notes?: string | null
+          ptax_rate?: number | null
+          received_on?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_receipts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "business_clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "business_receipts_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      companies: {
+        Row: {
+          cnpj: string
+          created_at: string | null
+          id: string
+          legal_name: string
+          profile_id: string
+          regime: string
+          trade_name: string | null
+        }
+        Insert: {
+          cnpj: string
+          created_at?: string | null
+          id?: string
+          legal_name: string
+          profile_id: string
+          regime: string
+          trade_name?: string | null
+        }
+        Update: {
+          cnpj?: string
+          created_at?: string | null
+          id?: string
+          legal_name?: string
+          profile_id?: string
+          regime?: string
+          trade_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "companies_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       budgets: {
         Row: {
           actual_amount: number | null
