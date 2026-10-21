@@ -9,6 +9,7 @@ import {
   Landmark,
   CalendarClock,
   Building2,
+  CreditCard,
   UserCircle,
   Settings,
   type LucideIcon,
@@ -119,6 +120,13 @@ export const NAV_ITEMS: NavItem[] = [
     href: "/configuracoes",
     icon: Settings,
     roles: ["admin"],
+  },
+  {
+    id: "P14",
+    label: "Faturas de Cartão",
+    href: "/cartoes",
+    icon: CreditCard,
+    roles: ["admin", "user", "viewer"],
   },
 ];
 
