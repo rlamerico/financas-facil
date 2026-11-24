@@ -3,6 +3,10 @@
 .env*.local
 .env.local
 
+# direnv: segredos ficam fora do repo (ver .envrc e ~/.claude/SUPABASE.md)
+.envrc
+.direnv/
+
 # Dependencies
 node_modules/
 
